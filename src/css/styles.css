@@ -70,6 +70,10 @@
   padding: 20px;
 }
 
+.country__list {
+  margin: 0 auto;
+}
+
 .country__info {
   width: 50%;
   list-style: none;
