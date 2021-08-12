@@ -1,14 +1,51 @@
 import countryTpl from '../templates/country.hbs';
 import fetchCountries from './fetchCountries';
-const _ = require('lodash');
+const debounce = require('lodash.debounce');
 
 const refs = {
   input: document.querySelector('#input'),
   output: document.querySelector('.country'),
 };
 
+// pnotify
+// import { info } from '@pnotify/core';
+import '@pnotify/core/dist/PNotify.css';
+// import '@pnotify/core/dist/Angeler.css';
+// import * as Confirm from '@pnotify/confirm';
+// import '@pnotify/confirm/dist/PNotifyConfirm.css';
+const { error } = require('@pnotify/core');
+const { defaultModules } = require('@pnotify/core');
+const PNotifyBootstrap4 = require('@pnotify/bootstrap4');
+
+defaultModules.set(PNotifyBootstrap4, {});
+// function alertPnotify() {
+//   info({
+//     title: 'Sorry!',
+//     text: 'Too many matches found. Please enter a more specific query!',
+//     modules: new Map([
+//       [
+//         Confirm,
+//         {
+//           confirm: true,
+//           buttons: [
+//             {
+//               text: 'Ok',
+//               primary: true,
+//               click: notice => {
+//                 notice.close();
+//               },
+//             },
+//           ],
+//         },
+//       ],
+//     ]),
+//   });
+// }
+// const myError = error({
+//   text: 'Too many matches found. Please enter a more specific query!',
+// });
 // считывание с инпута
-refs.input.addEventListener('input', _.debounce(searchCountry, 500));
+refs.input.addEventListener('input', debounce(searchCountry, 500));
 // refs.input.addEventListener('input', searchCountry);
 
 function searchCountry(e) {
@@ -17,7 +54,10 @@ function searchCountry(e) {
   fetchCountries(searchQuery).then(data => {
     console.log(data);
     if (data.length > 10) {
-      console.log('Too many matches found...');
+      // alertPnotify();
+      error({
+        text: 'Too many matches found. Please enter a more specific query!',
+      });
     } else if (data.length === 1) {
       const countryMarkup = countryTpl(data[0]);
       refs.output.innerHTML = countryMarkup;
