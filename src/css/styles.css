@@ -40,10 +40,7 @@
   font-size: 24px;
   border-width: 5px;
   border-radius: 10px;
-}
-
-#input:empty .country {
-  background-image: url(../images/Hand_drawn_globe.jpg);
+  padding: 5px;
 }
 
 .country {
@@ -62,6 +59,7 @@
 
 .country__name {
   font-size: 50px;
+  text-align: center;
 }
 
 .country__wrapper {
@@ -72,6 +70,17 @@
 
 .country__list {
   margin: 0 auto;
+}
+.country__list li {
+  margin-bottom: 10px;
+}
+.country__item {
+  text-decoration: none;
+  color: currentColor;
+}
+.country__item:hover,
+.country__item:focus {
+  color: rgb(88, 0, 211);
 }
 
 .country__info {
