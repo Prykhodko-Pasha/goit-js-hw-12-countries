@@ -27,34 +27,43 @@ function searchCountry(e) {
 }
 
 function generateSearchQueryResult(searchQuery) {
-  fetchCountries(searchQuery).then(data => {
-    // console.log(data);
-    if (data.length > 10) {
-      resetOutput();
+  fetchCountries(searchQuery)
+    .then(data => {
+      // console.log(data);
+      if (data.length > 10) {
+        resetOutput();
+        error({
+          title: 'Sorry!',
+          text: 'Too many matches found. Please enter a more specific query!',
+          delay: 3000,
+        });
+      } else if (data.length === 1) {
+        const countryMarkup = countryTpl(data[0]);
+        refs.output.innerHTML = countryMarkup;
+      } else if (data.length <= 10) {
+        const countryMarkup = data
+          .map(country => `<li><a href=# class="country__item">${country.name}</a></li>`)
+          .join('');
+        refs.output.innerHTML = `<ul class="country__list">${countryMarkup}</ul>`;
+        const countryListEl = document.querySelector('.country__list');
+        countryListEl.addEventListener('click', onCountryClick);
+      } else {
+        resetOutput();
+        error({
+          title: 'Sorry!',
+          text: 'No matches found. Please enter a correct query!',
+          delay: 3000,
+        });
+      }
+    })
+    .catch(err => {
+      console.log("I've cathed error: ", err);
       error({
-        title: 'Sorry!',
-        text: 'Too many matches found. Please enter a more specific query!',
+        title: 'Oops!',
+        text: 'Something went wrong on your side...',
         delay: 3000,
       });
-    } else if (data.length === 1) {
-      const countryMarkup = countryTpl(data[0]);
-      refs.output.innerHTML = countryMarkup;
-    } else if (data.length <= 10) {
-      const countryMarkup = data
-        .map(country => `<li><a href=# class="country__item">${country.name}</a></li>`)
-        .join('');
-      refs.output.innerHTML = `<ul class="country__list">${countryMarkup}</ul>`;
-      const countryListEl = document.querySelector('.country__list');
-      countryListEl.addEventListener('click', onCountryClick);
-    } else {
-      resetOutput();
-      error({
-        title: 'Sorry!',
-        text: 'No matches found. Please enter a correct query!',
-        delay: 3000,
-      });
-    }
-  });
+    });
 }
 
 function resetOutput() {
